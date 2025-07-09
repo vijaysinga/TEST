@@ -41,7 +41,27 @@ Edit
 aws eks update-kubeconfig --region <region_name> --name <cluster_name>
 ```
 
-## 2. Install ArgoCD
+## 2. Deploy NGINX using Kubernetes manifests
+
+Plese find the .yaml files related to nginx deployment, service 
+```bash
+Copy
+Edit
+cd manifests
+kubectl apply -f nginx-deployment.yaml
+kubectl apply -f nginx-service-nodeport.yaml  # this is using Nodeport service
+kubectl get svc                               # services will be shown
+```
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Deployed.PNG)
+Get ArgoCD admin password:
+```bash
+Copy
+Edit
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+```
+
+## 3. Setup ArgoCD on EKS 
 ```bash
 Copy
 Edit
@@ -58,14 +78,16 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ```
 ![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Deployed.PNG)
-## 3. ArgoCD Application
+
 Apply the ArgoCD app config:
 
 ```bash
 Copy
 Edit
 kubectl apply -f argocd/nginx-app.yaml -n argocd
-It will sync your manifests/ folder and deploy NGINX.
 ```
+It will sync your manifests/ folder and deploy NGINX.
+
+
 ## 4. Access the NGINX App
 Via LoadBalancer: kubectl get svc nginx-service
