@@ -20,6 +20,9 @@ module "eks" {
   # VPC and subnets
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
+  #manage_aws_auth_configmap       = true  # ✅ Must be enabled to manage access
+  enable_cluster_creator_admin_permissions = true  # ✅ Gives current user admin access
+
 
   enable_irsa = true
 
@@ -34,11 +37,26 @@ module "eks" {
 
       instance_types = ["t3.medium"]
       capacity_type  = "ON_DEMAND"
+      iam_role_arn = "<IAM_ARN>"
+    }
+
+  }
+  # ✅ Add IAM access to the EKS cluster
+   access_entries = {
+  admin = {
+    principal_arn = "<IAM_ARN>"
+
+    policy_associations = {
+      admin-access = {
+        policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy"
+        access_scope = {
+          type = "cluster"
+        }
+      }
     }
   }
+}
 
-  # IAM role mappings
-  # manage_aws_auth = true
 }
 
 module "vpc" {
