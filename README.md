@@ -15,4 +15,60 @@ terraform apply
 
 After some time EKS Cluster will be created with the specifications mentioned in the files 
 ![Example Image](TEST/Images/EKS Cluster.png)
-![Example Image](TEST/Images/Cluster.png)
+![Example Image](https://github.com/vijaysinga/TEST/Images/Cluster.png)
+
+# CI/CD Pipeline with EKS + Terraform + ArgoCD
+
+This repository provisions an AWS EKS cluster using Terraform, deploys an NGINX application via ArgoCD, and optionally exposes it.
+
+## Folder Structure
+
+- `terraform/` — EKS Cluster & VPC
+- `manifests/` — Kubernetes YAMLs (NGINX, Ingress)
+- `argocd/` — ArgoCD application resource
+- `README.md`
+
+---
+
+##  Getting Started
+
+### 1. Provision EKS with Terraform
+
+```bash
+cd terraform
+terraform init
+terraform apply
+After apply, configure kubeconfig:
+
+bash
+Copy
+Edit
+aws eks update-kubeconfig --region us-west-2 --name dev-eks-cluster
+```
+
+## 2. Install ArgoCD
+```bash
+Copy
+Edit
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+Get ArgoCD admin password:
+
+bash
+Copy
+Edit
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+```
+## 3. ArgoCD Application
+Apply the ArgoCD app config:
+
+```bash
+Copy
+Edit
+kubectl apply -f argocd/nginx-app.yaml -n argocd
+It will sync your manifests/ folder and deploy NGINX.
+```
+## 4. Access the NGINX App
+Via LoadBalancer: kubectl get svc nginx-service
