@@ -32,12 +32,10 @@ terraform apply
 After apply, configure kubeconfig:
 After some time EKS Cluster will be created with the specifications mentioned in the files 
 
-![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/EKS_Cluster.PNG)
 Cluster is created
 ![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/Cluster.PNG)
+
 ```bash
-Copy
-Edit
 aws eks update-kubeconfig --region <region_name> --name <cluster_name>
 ```
 
@@ -45,26 +43,15 @@ aws eks update-kubeconfig --region <region_name> --name <cluster_name>
 
 Plese find the .yaml files related to nginx deployment, service 
 ```bash
-Copy
-Edit
 cd manifests
 kubectl apply -f nginx-deployment.yaml
 kubectl apply -f nginx-service-nodeport.yaml  # this is using Nodeport service
 kubectl get svc                               # services will be shown
 ```
-![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Deployed.PNG)
-Get ArgoCD admin password:
-```bash
-Copy
-Edit
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-
-```
 
 ## 3. Setup ArgoCD on EKS 
 ```bash
-Copy
-Edit
+
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
@@ -72,22 +59,28 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 ![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Deployed.PNG)
 Get ArgoCD admin password:
 ```bash
-Copy
-Edit
+
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 ```
-![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Deployed.PNG)
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/ArgoCD_Login.PNG)
 
 Apply the ArgoCD app config:
 
 ```bash
-Copy
-Edit
+
 kubectl apply -f argocd/nginx-app.yaml -n argocd
 ```
 It will sync your manifests/ folder and deploy NGINX.
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/Nginx-app_ArgoCD.PNG)
+
 
 
 ## 4. Access the NGINX App
-Via LoadBalancer: kubectl get svc nginx-service
+NGINX Deployed and can be accessed through Load Balancer
+```bash
+
+kubectl apply -f manifests/nginx-service-ELB.yaml     # Using Load balancer service
+kubectl get svc nginx-service                
+```
+
