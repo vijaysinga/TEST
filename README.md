@@ -74,7 +74,7 @@ kubectl apply -f argocd/nginx-app.yaml -n argocd
 It will sync your manifests/ folder and deploy NGINX.
 ![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/Nginx-app_ArgoCD.PNG)
 
-# NGINX accessed through the ArgoCD deployment:
+## NGINX accessed through the ArgoCD deployment:
 ![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/nginx-using-ArgoCD.PNG)
 
 
