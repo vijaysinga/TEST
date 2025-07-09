@@ -15,7 +15,7 @@ terraform apply
 
 After some time EKS Cluster will be created with the specifications mentioned in the files 
 ![Example Image](TEST/Images/EKS Cluster.png)
-![Example Image](https://github.com/vijaysinga/TEST/Images/Cluster.png)
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/Cluster.PNG)
 
 # CI/CD Pipeline with EKS + Terraform + ArgoCD
 
@@ -39,8 +39,11 @@ cd terraform
 terraform init
 terraform apply
 After apply, configure kubeconfig:
-
-bash
+```
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/EKS Cluster.PNG)
+Cluster is created
+![Example Image](https://github.com/vijaysinga/TEST/blob/master/Images/Cluster.PNG)
+```bash
 Copy
 Edit
 aws eks update-kubeconfig --region us-west-2 --name dev-eks-cluster
